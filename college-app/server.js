@@ -1,4 +1,4 @@
-// server.js (Final Version with Data Seeding)
+// server.js (Definitive Final Version)
 
 const express = require('express');
 const { Pool } = require('pg');
@@ -7,7 +7,6 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Connect to the new Online Database
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -15,23 +14,12 @@ const pool = new Pool({
     }
 });
 
-// --- Function to Create Tables AND Seed Initial Data ---
 const initializeDatabase = async () => {
     try {
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS Students (
-                id SERIAL PRIMARY KEY,
-                roll_no INTEGER NOT NULL,
-                name TEXT NOT NULL,
-                division TEXT NOT NULL,
-                UNIQUE(roll_no, division)
-            );
-        `);
+        await pool.query(`CREATE TABLE IF NOT EXISTS Students (id SERIAL PRIMARY KEY, roll_no INTEGER NOT NULL, name TEXT NOT NULL, division TEXT NOT NULL, UNIQUE(roll_no, division));`);
         await pool.query(`CREATE TABLE IF NOT EXISTS Fines (id SERIAL PRIMARY KEY, student_roll_no INTEGER NOT NULL, student_division TEXT NOT NULL, date TEXT NOT NULL, amount REAL NOT NULL, lecture_name TEXT, topic TEXT);`);
         await pool.query(`CREATE TABLE IF NOT EXISTS Submissions (id SERIAL PRIMARY KEY, date TEXT NOT NULL, teacher_name TEXT NOT NULL, lecture_name TEXT NOT NULL, lecture_type TEXT, lecture_time TEXT, division TEXT NOT NULL, topic TEXT NOT NULL, absent_students TEXT);`);
         console.log("--- Database tables checked/created successfully ---");
-
-        // Check if the Students table is empty
         const studentCount = await pool.query("SELECT COUNT(*) FROM Students");
         if (studentCount.rows[0].count === '0') {
             console.log('--- Students table is empty. Seeding initial data... ---');
@@ -56,20 +44,42 @@ const initializeDatabase = async () => {
         console.error("Error initializing database:", err);
     }
 };
-
 initializeDatabase();
 
-// --- Teacher Accounts (unchanged) ---
 const HOD_PASSWORD = "HOD@CSD2025";
-const teachers = [ { email: 'head.cs@college.edu', code: 'CSHOD2025' }, { email: 'prof.sharma@college.edu', code: 'SHA_CS101' }, { email: 'prof.patel@college.edu', code: 'PAT_CS202' }, ];
+const teachers = [
+    { email: 'head.cs@college.edu', code: 'CSHOD2025' },
+    { email: 'prof.sharma@college.edu', code: 'SHA_CS101' },
+    { email: 'prof.patel@college.edu', code: 'PAT_CS202' },
+];
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// --- API Endpoints (unchanged from last version) ---
-app.post('/api/hod-login', (req, res) => { /* ... */ });
-app.post('/api/teacher-login', (req, res) => { /* ... */ });
+// --- API Endpoints ---
+
+// **FIXED: Restored HOD Login Logic**
+app.post('/api/hod-login', (req, res) => {
+    const { password } = req.body;
+    if (password === HOD_PASSWORD) {
+        res.json({ success: true, message: 'Login successful!' });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid password.' });
+    }
+});
+
+// **FIXED: Restored Teacher Login Logic**
+app.post('/api/teacher-login', (req, res) => {
+    const { email, code } = req.body;
+    const foundTeacher = teachers.find(t => t.email === email && t.code === code);
+    if (foundTeacher) {
+        res.json({ success: true, message: 'Login successful!' });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid email or access code.' });
+    }
+});
+
 app.post('/api/submit-attendance', async (req, res) => {
     const { date, lectureName, teacherName, division, topic, absentRollNos, lectureType, lectureTime } = req.body;
     try {
@@ -87,6 +97,7 @@ app.post('/api/submit-attendance', async (req, res) => {
         res.status(500).json({ success: false, message: "Server error." });
     }
 });
+
 app.get('/api/students/:division', async (req, res) => {
     const { division } = req.params;
     try {
@@ -98,8 +109,29 @@ app.get('/api/students/:division', async (req, res) => {
         res.status(500).json({ error: "Server error." });
     }
 });
-app.get('/api/all-submissions', async (req, res) => { /* ... */ });
-app.get('/api/export-csv', async (req, res) => { /* ... */ });
+    
+app.get('/api/all-submissions', async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT * FROM Submissions ORDER BY date DESC, lecture_time DESC`);
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: "Server error." });
+    }
+});
+
+app.get('/api/export-csv', async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT date, teacher_name, lecture_name, lecture_type, lecture_time, division, topic, absent_students FROM Submissions ORDER BY date DESC`);
+        const rows = result.rows;
+        const header = "Date,Teacher Name,Lecture Name,Type,Time,Division,Topic Taught,Absent Students\n";
+        const csvRows = rows.map(row => `"${row.date}","${row.teacher_name}","${row.lecture_name}","${row.lecture_type}","${row.lecture_time}","${row.division}","${row.topic}","${row.absent_students}"`).join("\n");
+        res.header('Content-Type', 'text/csv');
+        res.attachment(`attendance_report_${new Date().toISOString().split('T')[0]}.csv`);
+        res.send(header + csvRows);
+    } catch (err) {
+        res.status(500).send("Could not fetch data for export.");
+    }
+});
 
 // --- Start the Server ---
 app.listen(PORT, () => {
