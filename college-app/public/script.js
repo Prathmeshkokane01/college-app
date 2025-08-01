@@ -1,6 +1,6 @@
 // public/script.js
 
-const API_URL = 'http://localhost:3000';
+const API_URL = '';
 
 function getDisplayDate() {
     const date = new Date();
