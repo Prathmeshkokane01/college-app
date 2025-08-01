@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@latest/dist/jspdf.plugin.autotable.js"></script>
+</head>
+<body>
+    <div id="preloader"><div id="loader"></div></div>
+
+    <div class="header"><h1>HOD<span>Dashboard</span></h1></div>
+
+    <div class="container" id="hod-login-section">
+        <h2>Administrator Access</h2>
+        <form id="hod-login-form">
+            <input type="password" id="hod-password" placeholder="Enter Administrator Password" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p id="hod-login-message" class="message"></p>
+    </div>
+
+    <div class="container" id="hod-dashboard-section" style="display: none;">
+        <h2>Master Attendance Report</h2>
+        <p>View all submitted attendance records or download the full report.</p>
+
+        <div class="filter-section">
+            <select id="filterDivision">
+                <option value="">All Divisions</option>
+                <option value="A">Division A</option>
+                <option value="B">Division B</option>
+            </select>
+            <input type="text" id="filterTeacher" placeholder="Search by Teacher Name...">
+            <input type="date" id="filterDate">
+            <button id="applyFilterBtn" class="btn">Filter</button>
+            <button id="clearFilterBtn" class="btn btn-secondary">Clear</button>
+        </div>
+        
+        <div class="button-group">
+            <button id="downloadPdfBtn" class="btn">Download Report (PDF)</button>
+            <a href="/api/export-csv" class="btn btn-secondary">Download Report (Excel/CSV)</a>
+        </div>
+
+        <div id="master-report" class="table-container">
+            </div>
+    </div>
+    
+    <script src="script.js?v=1.5"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pratice Que 9</title>
+</head>
+<body>
+    <form action="/server"
+    <label for="age">I am 18+</label>
+    <input type="checkbox" id="age"/>
+    <div>
+       <label for="apple">apple</label>
+       <input type="radio" name="fruit" id="apple" value="apple"/>
+       <label for="mango">mango</label>
+       <input type="radio" name="fruit" id="mango" value="mango"/>
+       <label for="banana">banana</label>
+       <input type="radio" name="fruit" id="banana" value="banana"/>
+    </div>
+    <br>
+    <div>
+        Choose your subject
+        <br>
+        <label for="Physics">Physics</label>
+        <input type="checkbox" id="Physics" name="sub" value="Physics"/>
+        <label for="Math">Math</label>
+        <input type="checkbox" id="Math" name="sub" value="Math"/>
+        <label for="Chemistry">Chemistry</label>
+        <input type="checkbox" id="Chemistry" name="sub" value="Chemistry"/>
+        <br>
+    </div>
+    <br>
+    Choose your profession
+    <select name="profession" id="profession">
+        <option>Select Your Option</option>
+        <option value="student">Student</option>
+        <option value="Developer">Developer</option>
+        </select>
+        <div>
+            Select Volume Level
+            <label for="volume">volume</label>
+            <input type="range" min="0" max="100" name="vol" step="10"/> 
+
+        </div>
+        <br>
+        <label for="feedback">Plaese give your feedback :</label>
+        <textarea id="feedback" name="feedback" rows="2" cols="20" placeholder="write your feedbak" ></textarea>
+        <button type="submit">Submit</button> 
+</body>
+</html>

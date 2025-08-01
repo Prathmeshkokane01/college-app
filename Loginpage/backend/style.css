@@ -1,0 +1,246 @@
+/* --- Basic Setup --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+/* --- Video Background --- */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+
+#background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-background::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+/* --- Form Styles --- */
+.form-container {
+  position: relative;
+  width: 380px;
+  height: 500px;
+  perspective: 1200px;
+  z-index: 1;
+}
+
+.form-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  background: rgba(10, 30, 20, 0.75); /* Dark Emerald Tint */
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 184, 148, 0.2);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.form-wrapper.hidden {
+  transform: rotateY(-180deg);
+}
+
+.form-wrapper::before,
+.form-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #00b894; /* Emerald Green */
+  transition: all 0.3s ease;
+}
+
+.form-wrapper::before {
+  top: 15px;
+  left: 15px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.form-wrapper::after {
+  bottom: 15px;
+  right: 15px;
+  border-left: none;
+  border-top: none;
+}
+
+.form-wrapper:hover::before,
+.form-wrapper:hover::after {
+  width: 35px;
+  height: 35px;
+  box-shadow: 0 0 15px #00b894;
+}
+
+h2 {
+  color: #fff;
+  text-align: center;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+  text-shadow: 0 0 8px rgba(0, 184, 148, 0.7);
+}
+
+.info-text {
+  color: #ccc;
+  text-align: center;
+  font-size: 0.9em;
+  margin-bottom: 25px;
+  line-height: 1.4;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 35px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(0, 184, 148, 0.4);
+  outline: none;
+  color: #fff;
+  font-size: 1em;
+  transition: border-color 0.3s;
+}
+
+.input-group label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  color: rgba(0, 184, 148, 0.6);
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.input-group input:focus {
+  border-color: #00b894;
+}
+
+.input-group input:focus+label,
+.input-group input:valid+label {
+  top: -15px;
+  font-size: 0.8em;
+  color: #00b894;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0,184,148,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>');
+  background-size: contain;
+  opacity: 0.7;
+}
+
+.toggle-password.hide {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0,184,148,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>');
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #00b894;
+  border-radius: 5px;
+  background: transparent;
+  color: #00b894;
+  font-size: 1.1em;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: #00b894;
+  color: #000;
+  box-shadow: 0 0 15px #00b894;
+}
+
+/* --- OTP Input Styles --- */
+.otp-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 40px 0;
+}
+
+#otp-input {
+  width: 100%; 
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 184, 148, 0.4);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 1.2em;
+  text-align: center;
+  letter-spacing: 0.5em;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#otp-input:focus {
+  border-color: #00b894;
+  box-shadow: 0 0 15px rgba(0, 184, 148, 0.5);
+}
+
+.btn-verify {
+  flex-shrink: 0;
+  width: auto;
+  padding: 12px 20px;
+}
+
+
+/* --- Footer --- */
+.form-footer {
+  margin-top: 25px;
+  color: #ccc;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.form-footer a {
+  color: #00b894;
+  font-weight: 500;
+  text-decoration: none;
+  transition: text-shadow 0.3s;
+}
+
+.form-footer a:hover {
+  text-shadow: 0 0 5px #00b894;
+}

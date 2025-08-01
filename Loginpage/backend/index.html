@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login Page | Full Flow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="video-background">
+        <video autoplay loop muted playsinline id="background-video">
+            <source src="background-video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="form-container">
+        <div class="form-wrapper" id="login-form">
+            <div class="form-header">
+                <h2><b>Welcome Back</b></h2>
+            </div>
+            <form action="#">
+                <div class="input-group">
+                    <input type="email" required>
+                    <label>User ID or Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" class="password-input" required>
+                    <label>Password</label>
+                    <span class="toggle-password"></span>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <div class="form-footer">
+                    <a href="#" id="show-forgot-form">Reset Password</a>
+                    <p>Unauthorized? <a href="#" id="show-register-form">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-wrapper hidden" id="register-form">
+            <div class="form-header">
+                <h2>Sign Up</h2>
+            </div>
+            <form action="#">
+                <div class="input-group">
+                    <input type="text" id="register-name" required>
+                    <label>Full Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="register-email" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" class="password-input" id="register-password" required>
+                    <label>Create Password</label>
+                    <span class="toggle-password"></span>
+                </div>
+                <button type="submit" class="btn">Create Account</button>
+                <div class="form-footer">
+                    <p>Authorized? <a href="#" id="show-login-form-from-reg">Return to Login</a></p>
+                </div>
+            </form>
+        </div>
+        
+        <div class="form-wrapper hidden" id="forgot-form">
+            <div class="form-header">
+                <h2>Password Reset</h2>
+            </div>
+            <form action="#">
+                <p class="info-text">Enter your User ID to initiate password recovery.</p>
+                <div class="input-group">
+                    <input type="email" id="forgot-email" required>
+                    <label>User ID or Email</label>
+                </div>
+                <button type="submit" class="btn">Send OTP</button>
+                <div class="form-footer">
+                    <p>Access Restored? <a href="#" id="show-login-form-from-forgot">Return to Login</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-wrapper hidden" id="otp-form">
+            <div class="form-header">
+                <h2>Account Verification</h2>
+            </div>
+            <form action="#">
+                <p class="info-text" id="otp-info-text">An OTP has been sent to your email.</p>
+                <div class="otp-input-container">
+                    <input type="text" id="otp-input" inputmode="numeric" pattern="\d{5}" maxlength="5" placeholder="Enter The OTP" required>
+                </div>
+                <button type="submit" class="btn btn-verify">Verify</button>
+                <div class="form-footer">
+                    <p>Didn't receive a code? <a href="#">Resend</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-wrapper hidden" id="new-password-form">
+            <div class="form-header">
+                <h2>Set New Password</h2>
+            </div>
+            <form action="#">
+                 <p class="info-text">Please create a new secure password.</p>
+                <div class="input-group">
+                    <input type="password" class="password-input" required>
+                    <label>New Password</label>
+                    <span class="toggle-password"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" class="password-input" required>
+                    <label>Confirm New Password</label>
+                    <span class="toggle-password"></span>
+                </div>
+                <button type="submit" class="btn">Set New Password</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html
