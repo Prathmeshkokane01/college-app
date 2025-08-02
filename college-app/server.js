@@ -3,6 +3,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const bodyParser = require('body-parser'); // IMPORT THE NEW PACKAGE
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,42 +15,45 @@ const pool = new Pool({
     }
 });
 
-const initializeDatabase = async () => { /* ... This function is unchanged and correct ... */ };
+const initializeDatabase = async () => { /* ... This function is unchanged ... */ };
 initializeDatabase();
 
-const HOD_PASSWORD = "HOD@CSD2025";
-const teachers = [
-    { email: 'head.cs@college.edu', code: 'CSHOD2025' },
-    { email: 'prof.sharma@college.edu', code: 'SHA_CS101' },
-    { email: 'prof.patel@college.edu', code: 'PAT_CS202' },
-];
+const HOD_PASSWORD = "HOD1234";
+const teachers = [ { email: 'prathmeshkokane0@gmail.com', code: '1230' }, { email: 'prof.sharma@college.edu', code: 'SHA_CS101' }, { email: 'prof.patel@college.edu', code: 'PAT_CS202' }, ];
 
 app.use(cors());
-app.use(express.json());
+// USE THE NEW BODY-PARSER INSTEAD OF express.json()
+app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// --- API Endpoints (Updated with correct table names) ---
-
-app.post('/api/hod-login', (req, res) => { /* ... Unchanged ... */ });
-app.post('/api/teacher-login', (req, res) => { /* ... Unchanged ... */ });
+// --- API Endpoints ---
+app.post('/api/hod-login', (req, res) => {
+    const { password } = req.body;
+    if (password === HOD_PASSWORD) {
+        res.json({ success: true, message: 'Login successful!' });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid password.' });
+    }
+});
+app.post('/api/teacher-login', (req, res) => {
+    const { email, code } = req.body;
+    const foundTeacher = teachers.find(t => t.email === email && t.code === code);
+    if (foundTeacher) {
+        res.json({ success: true, message: 'Login successful!' });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid email or access code.' });
+    }
+});
 
 app.post('/api/submit-attendance', async (req, res) => {
     const { date, lectureName, teacherName, division, topic, absentRollNos, lectureType, lectureTime } = req.body;
     try {
         const absent_students_text = absentRollNos.length > 0 ? absentRollNos.join(', ') : 'None';
-        // FIXED: Added quotes around "Submissions"
-        await pool.query(
-            `INSERT INTO "Submissions" (date, teacher_name, lecture_name, lecture_type, lecture_time, division, topic, absent_students) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-            [date, teacherName, lectureName, lectureType, lectureTime, division, topic, absent_students_text]
-        );
+        await pool.query(`INSERT INTO "Submissions" (date, teacher_name, lecture_name, lecture_type, lecture_time, division, topic, absent_students) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [date, teacherName, lectureName, lectureType, lectureTime, division, topic, absent_students_text]);
         if (absentRollNos && absentRollNos.length > 0) {
             const fineAmount = 100;
             for (const rollNo of absentRollNos) {
-                // FIXED: Added quotes around "Fines"
-                await pool.query(
-                    `INSERT INTO "Fines" (student_roll_no, student_division, date, amount, lecture_name, topic) VALUES ($1, $2, $3, $4, $5, $6)`,
-                    [rollNo, division, date, fineAmount, lectureName, topic]
-                );
+                await pool.query(`INSERT INTO "Fines" (student_roll_no, student_division, date, amount, lecture_name, topic) VALUES ($1, $2, $3, $4, $5, $6)`, [rollNo, division, date, fineAmount, lectureName, topic]);
             }
         }
         res.json({ success: true, message: 'Attendance recorded successfully.' });
@@ -62,9 +66,7 @@ app.post('/api/submit-attendance', async (req, res) => {
 app.get('/api/students/:division', async (req, res) => {
     const { division } = req.params;
     try {
-        // FIXED: Added quotes around "Students"
         const studentsResult = await pool.query(`SELECT roll_no, name FROM "Students" WHERE division = $1 ORDER BY roll_no`, [division]);
-        // FIXED: Added quotes around "Fines"
         const finesResult = await pool.query(`SELECT student_roll_no, date, amount FROM "Fines" WHERE student_division = $1`, [division]);
         res.json({ students: studentsResult.rows, fines: finesResult.rows });
     } catch (err) {
@@ -75,7 +77,6 @@ app.get('/api/students/:division', async (req, res) => {
     
 app.get('/api/all-submissions', async (req, res) => {
     try {
-        // FIXED: Added quotes around "Submissions"
         const result = await pool.query(`SELECT * FROM "Submissions" ORDER BY date DESC, lecture_time DESC`);
         res.json(result.rows);
     } catch (err) {
@@ -85,7 +86,6 @@ app.get('/api/all-submissions', async (req, res) => {
 
 app.get('/api/export-csv', async (req, res) => {
     try {
-        // FIXED: Added quotes around "Submissions"
         const result = await pool.query(`SELECT date, teacher_name, lecture_name, lecture_type, lecture_time, division, topic, absent_students FROM "Submissions" ORDER BY date DESC`);
         const rows = result.rows;
         const header = "Date,Teacher Name,Lecture Name,Type,Time,Division,Topic Taught,Absent Students\n";
@@ -98,7 +98,6 @@ app.get('/api/export-csv', async (req, res) => {
     }
 });
 
-// --- Start the Server ---
 app.listen(PORT, () => {
     console.log(`--- ✅ SERVER IS LIVE and listening on port ${PORT} ---`);
 });
