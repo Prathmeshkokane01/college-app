@@ -1,9 +1,8 @@
-/* public/style.css */
+/* public/style.css (Simple Version) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
     --primary-color: #007BFF;
-    --accent-color: #FFC107;
     --background-light: #F8F9FA;
     --card-background: #FFFFFF;
     --text-dark: #212529;
@@ -12,20 +11,12 @@
     --border-color: #DEE2E6;
 }
 
-@keyframes animateGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
 body {
     font-family: 'Poppins', sans-serif;
     color: var(--text-dark);
     margin: 0;
     padding: 40px 20px;
-    background: linear-gradient(-45deg, #e0f7fa, #b2ebf2, #80deea, #4dd0e1);
-    background-size: 400% 400%;
-    animation: animateGradient 20s ease infinite;
+    background-color: #e0f7fa;
     min-height: 100vh;
 }
 
@@ -38,7 +29,6 @@ body {
     font-size: 2.8rem;
     color: #004d99;
     font-weight: 700;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 .header span {
@@ -54,14 +44,6 @@ body {
     margin: 0 auto 25px auto;
     border: 1px solid #f0f0f0;
     text-align: center;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.container.visible {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 h2 {
@@ -76,52 +58,19 @@ p {
     margin-bottom: 30px;
 }
 
-.button-group, form, .filter-section {
-    text-align: left;
+.button-group, form {
+    text-align: center;
 }
 
 .button-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-.btn { background: var(--primary-color); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2); }
-.btn:hover { transform: translateY(-3px); box-shadow: 0 7px 20px rgba(0, 123, 255, 0.3); }
-.btn-secondary { background: #E7F3FF; color: var(--primary-color); box-shadow: none; }
-.btn-secondary:hover { background: #d0e6ff; }
+.btn { background: var(--primary-color); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; text-decoration: none; transition: all 0.2s ease; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); }
 form { display: flex; flex-direction: column; gap: 20px; }
-input, select { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; box-sizing: border-box; transition: all 0.2s ease; }
-input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); }
-
-.table-container {
-    overflow-x: auto; /* This makes the table scroll horizontally */
-    width: 100%;
-}
-
-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    margin-top: 20px; 
-    min-width: 700px; /* Ensures table has a minimum width before scrolling */
-}
-th, td { padding: 12px 15px; border: 1px solid var(--border-color); }
-th { background-color: #f8f9fa; color: var(--text-dark); font-weight: 600; }
-tr:nth-child(even) { background-color: #f8f9fa; }
-tr { transition: background-color 0.2s ease-in-out; }
-tr:hover { background-color: #e9ecef; }
+input, select { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+.table-container { overflow-x: auto; width: 100%; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; min-width: 700px; }
+th, td { padding: 12px 15px; border: 1px solid var(--border-color); text-align: left; }
+th { background-color: #f8f9fa; font-weight: 600; }
 .fine { color: #DC3545; font-weight: bold; }
 table th:nth-child(2), table td:nth-child(2) { min-width: 200px; }
-.filter-section { display: flex; gap: 15px; align-items: center; justify-content: center; padding: 20px; background-color: #f8f9fa; border-radius: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .message { margin-top: 15px; font-weight: 500; padding: 10px; border-radius: 8px; }
-.message.success { color: #155724; background-color: #D4EDDA; }
-.message.error { color: #721C24; background-color: #F8D7DA; }
-
-#preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
-#loader { border: 8px solid #f3f3f3; border-top: 8px solid var(--primary-color); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-/* Add this to the end of your style.css file */
-.btn-danger {
-    background: #DC3545;
-    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
-}
-.btn-danger:hover {
-    background: #c82333;
-    box-shadow: 0 7px 20px rgba(220, 53, 69, 0.3);
-}
