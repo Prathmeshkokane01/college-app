@@ -9,9 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    ssl: { rejectUnauthorized: false }
 });
 
 const initializeDatabase = async () => {
@@ -19,20 +17,17 @@ const initializeDatabase = async () => {
         await pool.query(`CREATE TABLE IF NOT EXISTS "Students" (id SERIAL PRIMARY KEY, roll_no INTEGER NOT NULL, name TEXT NOT NULL, division TEXT NOT NULL, UNIQUE(roll_no, division));`);
         await pool.query(`CREATE TABLE IF NOT EXISTS "Fines" (id SERIAL PRIMARY KEY, student_roll_no INTEGER NOT NULL, student_division TEXT NOT NULL, date TEXT NOT NULL, lecture_time TEXT, amount REAL NOT NULL, lecture_name TEXT, topic TEXT);`);
         await pool.query(`CREATE TABLE IF NOT EXISTS "Submissions" (id SERIAL PRIMARY KEY, date TEXT NOT NULL, teacher_name TEXT NOT NULL, lecture_name TEXT NOT NULL, lecture_type TEXT, lecture_time TEXT, division TEXT NOT NULL, topic TEXT NOT NULL, absent_students TEXT);`);
+        
         const studentCount = await pool.query(`SELECT COUNT(*) FROM "Students"`);
         if (studentCount.rows[0].count === '0') {
-            console.log('--- Seeding new student data... ---');
+            console.log('--- Students table is empty. Seeding initial data... ---');
             const students = [
                 { roll: 1, name: 'Aarav Gupta', div: 'A' }, { roll: 2, name: 'Vivaan Singh', div: 'A' }, { roll: 3, name: 'Aditya Sharma', div: 'A' }, { roll: 4, name: 'Vihaan Kumar', div: 'A' }, { roll: 5, name: 'Arjun Patel', div: 'A' }, { roll: 6, name: 'Sai Reddy', div: 'A' }, { roll: 7, name: 'Reyansh Joshi', div: 'A' }, { roll: 8, name: 'Krishna Mehta', div: 'A' }, { roll: 9, name: 'Ishaan Verma', div: 'A' }, { roll: 10, name: 'Advik Shah', div: 'A' },
                 { roll: 1, name: 'Ananya Roy', div: 'B' }, { roll: 2, name: 'Diya Das', div: 'B' }, { roll: 3, name: 'Pari Ghosh', div: 'B' }, { roll: 4, name: 'Myra Bose', div: 'B' }, { roll: 5, name: 'Aadhya Sen', div: 'B' }, { roll: 6, name: 'Kiara Dutta', div: 'B' }, { roll: 7, name: 'Saanvi Iyer', div: 'B' }, { roll: 8, name: 'Amaira Nair', div: 'B' }, { roll: 9, name: 'Anika Pillai', div: 'B' }, { roll: 10, name: 'Navya Menon', div: 'B' }
             ];
-            for (const s of students) {
-                await pool.query(`INSERT INTO "Students" (roll_no, name, division) VALUES ($1, $2, $3)`, [s.roll, s.name, s.div]);
-            }
+            for (const s of students) { await pool.query(`INSERT INTO "Students" (roll_no, name, division) VALUES ($1, $2, $3)`, [s.roll, s.name, s.div]); }
         }
-    } catch (err) {
-        console.error("Error initializing database:", err);
-    }
+    } catch (err) { console.error("Error initializing database:", err); }
 };
 initializeDatabase();
 
@@ -42,15 +37,6 @@ const teachers = [ { email: 'head.cs@college.edu', code: 'CSHOD2025' }, { email:
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
-
-app.delete('/api/remove-fine', async (req, res) => {
-    const { rollNo, division, date, lectureTime } = req.body;
-    try {
-        const result = await pool.query(`DELETE FROM "Fines" WHERE student_roll_no = $1 AND student_division = $2 AND date = $3 AND lecture_time = $4`,[rollNo, division, date, lectureTime]);
-        if (result.rowCount > 0) { res.json({ success: true, message: `Fine removed successfully.` }); } 
-        else { res.status(404).json({ success: false, message: 'No matching fine found to remove.' }); }
-    } catch (err) { res.status(500).json({ success: false, message: "Server error." }); }
-});
 
 app.post('/api/hod-login', (req, res) => { const { password } = req.body; if (password === HOD_PASSWORD) { res.json({ success: true, message: 'Login successful!' }); } else { res.status(401).json({ success: false, message: 'Invalid password.' }); } });
 app.post('/api/teacher-login', (req, res) => { const { email, code } = req.body; const foundTeacher = teachers.find(t => t.email === email && t.code === code); if (foundTeacher) { res.json({ success: true, message: 'Login successful!' }); } else { res.status(401).json({ success: false, message: 'Invalid email or access code.' }); } });

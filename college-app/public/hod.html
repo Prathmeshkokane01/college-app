@@ -10,9 +10,7 @@
 </head>
 <body>
     <div id="preloader"><div id="loader"></div></div>
-
     <div class="header"><h1>HOD<span>Dashboard</span></h1></div>
-
     <div class="container" id="hod-login-section">
         <h2>Administrator Access</h2>
         <form id="hod-login-form">
@@ -21,61 +19,22 @@
         </form>
         <p id="hod-login-message" class="message"></p>
     </div>
-
-    <div id="hod-dashboard-section" style="display: none;">
-        <div class="container">
-            <h2>Remove an Incorrect Fine</h2>
-            <form id="remove-fine-form">
-                <label for="removeRollNo">Student Roll Number:</label>
-                <input type="number" id="removeRollNo" placeholder="e.g., 5" required>
-
-                <label for="removeDivision">Division:</label>
-                <select id="removeDivision" required>
-                    <option value="" disabled selected>-- Select Division --</option>
-                    <option value="A">Div A</option>
-                    <option value="B">Div B</option>
-                </select>
-
-                <label for="removeDate">Date of Incorrect Fine:</label>
-                <input type="date" id="removeDate" required>
-
-                <label for="removeLectureTime">Lecture Time of Incorrect Fine:</label>
-                <select id="removeLectureTime" required>
-                    <option value="" disabled selected>-- Select the time slot --</option>
-                    <option value="9:30 AM - 10:25 AM">9:30 AM - 10:25 AM</option>
-                    <option value="10:25 AM - 11:20 AM">10:25 AM - 11:20 AM</option>
-                    <option value="11:30 AM - 1:20 PM">11:30 AM - 1:20 PM</option>
-                    <option value="2:15 PM - 3:10 PM">2:15 PM - 3:10 PM</option>
-                    <option value="3:10 PM - 4:05 PM">3:10 PM - 4:05 PM</option>
-                    <option value="4:05 PM - 5:00 PM">4:05 PM - 5:00 PM</option>
-                </select>
-                <button type="submit" class="btn btn-danger">Remove Fine</button>
-            </form>
-            <p id="remove-fine-message" class="message"></p>
+    <div class="container" id="hod-dashboard-section" style="display: none;">
+        <h2>Master Attendance Report</h2>
+        <p>View all submitted attendance records or download the full report.</p>
+        <div class="filter-section">
+            <select id="filterDivision"><option value="">All Divisions</option><option value="A">Division A</option><option value="B">Division B</option></select>
+            <input type="text" id="filterTeacher" placeholder="Search by Teacher Name...">
+            <input type="date" id="filterDate">
+            <button id="applyFilterBtn" class="btn">Filter</button>
+            <button id="clearFilterBtn" class="btn btn-secondary">Clear</button>
         </div>
-
-        <div class="container">
-            <h2>Master Attendance Report</h2>
-            <p>View all submitted attendance records or download the full report.</p>
-            <div class="filter-section">
-                <select id="filterDivision">
-                    <option value="">All Divisions</option>
-                    <option value="A">Division A</option>
-                    <option value="B">Division B</option>
-                </select>
-                <input type="text" id="filterTeacher" placeholder="Search by Teacher Name...">
-                <input type="date" id="filterDate">
-                <button id="applyFilterBtn" class="btn">Filter</button>
-                <button id="clearFilterBtn" class="btn btn-secondary">Clear</button>
-            </div>
-            <div class="button-group">
-                <button id="downloadPdfBtn" class="btn">Download Report (PDF)</button>
-                <a href="/api/export-csv" class="btn btn-secondary">Download Report (Excel/CSV)</a>
-            </div>
-            <div id="master-report" class="table-container"></div>
+        <div class="button-group">
+            <button id="downloadPdfBtn" class="btn">Download Report (PDF)</button>
+            <a href="/api/export-csv" class="btn btn-secondary">Download Report (CSV)</a>
         </div>
+        <div id="master-report" class="table-container"></div>
     </div>
-    
-    <script src="script.js?v=2.1"></script>
+    <script src="script.js?v=5.0"></script>
 </body>
 </html>
